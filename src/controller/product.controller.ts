@@ -2,12 +2,15 @@ import { Request, Response } from "express";
 import {
   CreateProductInput,
   UpdateProductInput,
+  ReadProductInput,
+  DeleteProductInput,
 } from "../schema/product.schema";
 import {
   createProduct,
   deleteProduct,
   findAndUpdateProduct,
   findProduct,
+  findAllProductsByUserId,
 } from "../service/product.service";
 
 export async function createProductHandler(
@@ -50,10 +53,11 @@ export async function updateProductHandler(
 }
 
 export async function getProductHandler(
-  req: Request<UpdateProductInput["params"]>,
+  req: Request<ReadProductInput["params"]>,
   res: Response
 ) {
   const productId = req.params.productId;
+
   const product = await findProduct({ productId });
 
   if (!product) {
@@ -63,8 +67,19 @@ export async function getProductHandler(
   return res.send(product);
 }
 
+export async function getAllProductsHandler(req: Request, res: Response) {
+  const user = res.locals.user._id;
+  const products = await findAllProductsByUserId({ user });
+
+  if (!products) {
+    return res.sendStatus(404);
+  }
+
+  return res.send(products);
+}
+
 export async function deleteProductHandler(
-  req: Request<UpdateProductInput["params"]>,
+  req: Request<DeleteProductInput["params"]>,
   res: Response
 ) {
   const userId = res.locals.user._id;

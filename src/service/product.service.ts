@@ -25,6 +25,18 @@ export async function findProduct(
   }
 }
 
+export async function findAllProductsByUserId(
+  query: FilterQuery<ProductDocument>,
+  options: QueryOptions = { lean: true }
+) {
+  try {
+    const result = await ProductModel.find(query, {}, options);
+    return result;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export async function findAndUpdateProduct(
   query: FilterQuery<ProductDocument>,
   update: UpdateQuery<ProductDocument>,

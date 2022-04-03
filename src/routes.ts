@@ -4,6 +4,7 @@ import { Express, Request, Response } from "express";
 import {
   createProductHandler,
   getProductHandler,
+  getAllProductsHandler,
   updateProductHandler,
   deleteProductHandler,
 } from "./controller/product.controller";
@@ -62,6 +63,8 @@ function routes(app: Express) {
     validateResource(getProductSchema),
     getProductHandler
   );
+
+  app.get("/api/products/", requireUser, getAllProductsHandler);
 
   app.delete(
     "/api/products/:productId",
